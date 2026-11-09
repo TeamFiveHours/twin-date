@@ -64,10 +64,8 @@ function MatchInner() {
                     <PersonPhoto src={c.person.photo} alt={c.person.name} size={48} />
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5 text-[15px] font-semibold text-ink">
-                        <span className="truncate">
-                          {c.person.name} · {c.person.age}
-                        </span>
-                        {c.person.twinAlias && (
+                        <span className="truncate">{c.person.name}</span>
+                        {c.person.twinAlias && c.person.twinAlias !== c.person.name && (
                           <span className="shrink-0 rounded-full bg-twin-soft px-2 py-0.5 text-[11px] font-semibold text-twin">
                             {c.person.twinAlias}
                           </span>

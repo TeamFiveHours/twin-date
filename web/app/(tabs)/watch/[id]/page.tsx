@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowRight, Heart, X, User } from "lucide-react";
+import { ArrowRight, Heart, User } from "lucide-react";
 import { Screen } from "@/components/layout/Screen";
 import { TopNav } from "@/components/layout/TopNav";
 import { TwinMini } from "@/components/twin/TwinMini";
@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/Button";
 import { Chip, LikeChip, type ChipTone } from "@/components/ui/Chip";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Skeleton } from "@/components/ui/Skeleton";
-import { toast } from "@/components/ui/Toast";
 import { StagePlayer } from "@/components/player/StagePlayer";
 import { useAsync } from "@/hooks/useAsync";
 import { useScreenState } from "@/hooks/useScreenState";
@@ -34,8 +33,6 @@ function WatchDetailInner() {
   const twin = useStore((s) => s.twin.name);
   const setStore = useStore((s) => s.set);
   const { data, loading } = useAsync(() => api.getDialogue(id), [id], { forced });
-  const [passed, setPassed] = useState(false);
-  const [passing, setPassing] = useState(false);
   const [liking, setLiking] = useState(false);
   const summaryRef = useRef<HTMLDivElement>(null);
 
@@ -70,11 +67,11 @@ function WatchDetailInner() {
 
   const alias = api.aliasOf(data.otherId);
   const cand = api.candidateForDialogue(data.id, true);
-  const decision = passed ? "no" : api.decisionForDialogue(data.id);
+  const decision = api.decisionForDialogue(data.id);
   const chat = cand ? api.chatForCandidate(cand.id) : null;
-  const like = passed ? "passed" : api.likeStateForDialogue(data.id);
+  const like = api.likeStateForDialogue(data.id);
 
-  /** "Match" here records a like and opens the profile, where the Match is confirmed. */
+  /** Records a like and opens the profile; Pass / Match are decided there. */
   const likeAndSee = async () => {
     if (!cand || liking) return;
     setLiking(true);
@@ -125,33 +122,9 @@ function WatchDetailInner() {
         {cand && (
           <div className="flex flex-col items-center gap-3">
             {!decision ? (
-              <div className="flex w-full gap-3">
-                <Button
-                  variant="secondary"
-                  loading={passing}
-                  disabled={liking}
-                  icon={<X className="size-4" />}
-                  onClick={async () => {
-                    setPassing(true);
-                    await api.decide(cand.id, "no");
-                    setPassing(false);
-                    setPassed(true);
-                    toast("Okay, passing");
-                  }}
-                  className="flex-1"
-                >
-                  Pass
-                </Button>
-                <Button
-                  loading={liking}
-                  disabled={passing}
-                  icon={<Heart className="size-4" fill="currentColor" />}
-                  onClick={likeAndSee}
-                  className="flex-[1.4]"
-                >
-                  Match
-                </Button>
-              </div>
+              <Button full size="lg" loading={liking} icon={<Heart className="size-5" fill="currentColor" />} onClick={likeAndSee}>
+                Like &amp; Open Profile
+              </Button>
             ) : decision === "yes" && chat ? (
               <Button full icon={<ArrowRight className="size-4" />} onClick={() => router.push(`/match/${chat.id}`)}>
                 Open chat with {cand.name}
