@@ -54,7 +54,7 @@ export default function ProfilePage() {
     toast(`Match sent. I'll tell you when ${profile.name} answers`);
   };
 
-  return <Screen>
+  return <Screen className="pb-[172px]">
     <TopNav backHref={`/watch/${id}`} title="Profile" />
     <div className="mt-4 overflow-hidden rounded-3xl border border-line bg-surface">
       <div className="relative h-[360px] bg-surface-2">
@@ -93,7 +93,9 @@ export default function ProfilePage() {
         </div>
       </div>
     </div>
-    <div className="my-5 flex flex-col items-center gap-3">
+    {/* Pass / Match stay on screen while the profile card scrolls underneath */}
+    <div className="app-fixed pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center">
+    <div className="safe-bottom pointer-events-auto flex w-full min-[480px]:max-w-[390px] flex-col items-center gap-3 bg-gradient-to-t from-bg via-bg/95 to-bg/0 px-5 pt-8">
       {decision === "yes" && chat ? (
         <Button full size="lg" icon={<ArrowRight className="size-5" />} onClick={() => router.push(`/match/${chat.id}`)}>
           Open chat with {profile.name}
@@ -124,6 +126,7 @@ export default function ProfilePage() {
           </p>
         </>
       )}
+    </div>
     </div>
     {matched && <MatchOverlay photo={matched.photo} name={matched.name} />}
   </Screen>;
