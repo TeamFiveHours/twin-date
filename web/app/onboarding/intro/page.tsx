@@ -44,7 +44,7 @@ const SLIDES: Slide[] = [
     big: true,
     art: (
       <div className="relative flex items-end gap-6">
-        <TwinAvatar who="me" size={92} halo={false} />
+        <TwinAvatar who="me" illustrated size={92} halo={false} />
         <TwinAvatar who="other" mood="happy" size={92} halo={false} />
         <span className="absolute left-1/2 top-3 flex size-11 -translate-x-1/2 items-center justify-center rounded-full bg-surface shadow-sm">
           <MessageSquare className="size-5 text-accent" strokeWidth={2} />
@@ -59,7 +59,7 @@ const SLIDES: Slide[] = [
     big: true,
     art: (
       <div className="relative">
-        <TwinAvatar who="me" mood="talking" size={116} halo={false} />
+        <TwinAvatar who="me" illustrated mood="talking" size={116} halo={false} />
         <span className="absolute -bottom-3 left-1/2 flex size-12 -translate-x-1/2 items-center justify-center rounded-full bg-surface shadow-sm">
           <Heart className="size-5 text-good" strokeWidth={2} />
         </span>
