@@ -1,0 +1,23 @@
+{
+  "twinName": "Momo",
+  "cards": {
+    "tone": "I keep it short and warm. I ask one question at a time and I don't rush to fill silences.",
+    "humor": "Dry, a little self-deprecating. I'd rather make one good joke than ten okay ones.",
+    "values": "Being on time, finishing what I start, and people who are curious about things outside their job.",
+    "banned": "Politics, exes, and what anyone earns.",
+    "ideal": "Someone who walks everywhere, has a playlist for everything, and laughs at their own jokes.",
+    "examples": {
+      "tone": "Wait, which market? I need to know if it's the good one.",
+      "humor": "I run. Slowly. It's more of a brisk existential crisis."
+    }
+  },
+  "accuracy": 74,
+  "sources": [
+    { "id": "spotify", "name": "Spotify", "desc": "Your go-to genres and tastes", "icon": "music" },
+    { "id": "calendar", "name": "Calendar", "desc": "The days and times you're usually free", "icon": "calendar" },
+    { "id": "netflix", "name": "Netflix", "desc": "The genres a lot of your tastes come from", "icon": "tv" },
+    { "id": "maps", "name": "Google Maps", "desc": "The places you go in your area", "icon": "map-pin" },
+    { "id": "youtube", "name": "YouTube", "desc": "The videos and channels you watch", "icon": "youtube" },
+    { "id": "instagram", "name": "Instagram", "desc": "Only the categories or accounts you follow and like", "icon": "instagram" }
+  ]
+}

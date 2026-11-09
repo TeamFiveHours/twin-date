@@ -1,0 +1,16 @@
+{
+  "name": "twindate-agent",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Server-side browser agent: the user logs in to Instagram inside a live view, then the agent reads their feed and follow lists.",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "playwright": "^1.52.0",
+    "ws": "^8.18.0"
+  }
+}

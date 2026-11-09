@@ -1,0 +1,162 @@
+[
+  {
+    "id": "cand_emma",
+    "dialogueId": "d1",
+    "name": "Michael",
+    "age": 24,
+    "school": "Stanford · Symbolic Systems",
+    "photos": [
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1583195764036-6dc248ac07d9?w=720&h=900&fit=crop&crop=faces"
+    ],
+    "bio": "Walks, not runs. Sundays at the farmers market, not the library. Looking for someone to argue about playlists with.",
+    "whyLine": "You both say sorry first. The thing to talk about early is pace—Michael wants to know where it's going.",
+    "quotes": [
+      "I've got a separate playlist for late night walks.",
+      "Do you like heading out on weekends with no plan?"
+    ],
+    "expiresInHours": 70,
+    "theirDecision": "yes"
+  },
+  {
+    "id": "cand_chloe",
+    "dialogueId": "d2",
+    "name": "Noah",
+    "age": 27,
+    "school": "UCSF · Nursing",
+    "photos": [
+      "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1542909168-82c3e7fdca5c?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=720&h=900&fit=crop&crop=faces"
+    ],
+    "bio": "Night shifts, so my weekends start on Tuesday. Big on brunch and small on plans.",
+    "whyLine": "Neither of you labels things early. Noah's short, fast replies are the thing to get used to.",
+    "quotes": [
+      "I'm better in person than over text, honestly.",
+      "Tuesday is my Saturday."
+    ],
+    "expiresInHours": 48,
+    "theirDecision": "pending"
+  },
+  {
+    "id": "cand_fiona",
+    "dialogueId": "d3",
+    "name": "Ethan",
+    "age": 25,
+    "school": "SJSU · Graphic Design",
+    "photos": [
+      "https://images.unsplash.com/photo-1531427186611-ecfd6d936c79?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1488161628813-04466f872be2?w=720&h=900&fit=crop&crop=faces"
+    ],
+    "bio": "I redesign menus in my head while ordering. Trail runs on Saturdays, naps on Sundays.",
+    "whyLine": "Keeps it light in a disagreement, but didn't ask a follow-up when I shared something.",
+    "quotes": [
+      "I need a plan, even for a lazy day.",
+      "Running is the only time my brain is quiet."
+    ],
+    "expiresInHours": 36,
+    "theirDecision": "no"
+  },
+  {
+    "id": "cand_paul",
+    "dialogueId": "d4",
+    "name": "Paul",
+    "age": 28,
+    "school": "Santa Clara · Finance",
+    "photos": [
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=720&h=900&fit=crop&crop=faces"
+    ],
+    "bio": "Will defend my bagel place to the end. Early riser, late texter.",
+    "whyLine": "No grudges after a disagreement. Ask about workday check-ins—Paul goes quiet.",
+    "quotes": [
+      "There's exactly one good bagel place in the city and it's not yours.",
+      "I plan trips around breakfast."
+    ],
+    "expiresInHours": 60,
+    "theirDecision": "yes"
+  },
+  {
+    "id": "cand_sam",
+    "dialogueId": "d5",
+    "name": "Sam",
+    "age": 26,
+    "school": "UC Davis · Environmental Science",
+    "photos": [
+      "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1533227268428-f9ed0900fb3b?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1564564321837-a57b7070ac4f?w=720&h=900&fit=crop&crop=faces"
+    ],
+    "bio": "Field work most weeks, which means I own more boots than shoes. Looking for someone who likes being outside.",
+    "whyLine": "Same slow-and-steady pace. Sam wants comfort in words; you show it in actions.",
+    "quotes": [
+      "I'd rather be cold outside than warm on a couch.",
+      "Ask me about soil, I dare you."
+    ],
+    "expiresInHours": 44,
+    "theirDecision": "pending"
+  },
+  {
+    "id": "cand_bella",
+    "dialogueId": "d6",
+    "name": "Lucas",
+    "age": 25,
+    "school": "Stanford · Product Design",
+    "photos": [
+      "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1557862921-37829c790f19?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1566753323558-f4e0952af115?w=720&h=900&fit=crop&crop=faces"
+    ],
+    "bio": "Saturday market, Sunday reset. I keep a running list of cafés with good light.",
+    "whyLine": "You both ask follow-ups. Lucas wants a reply the same night—worth saying how you do evenings.",
+    "quotes": [
+      "I go to the market before it gets crowded, around eight.",
+      "A good café is about the light, not the coffee."
+    ],
+    "expiresInHours": 66,
+    "theirDecision": "yes"
+  },
+  {
+    "id": "cand_max",
+    "dialogueId": "d7",
+    "name": "Max",
+    "age": 29,
+    "school": "Cal Poly · Mechanical Engineering",
+    "photos": [
+      "https://images.unsplash.com/photo-1463453091185-61582044d556?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1504257432389-52343af06ae3?w=720&h=900&fit=crop&crop=faces"
+    ],
+    "bio": "I fix things for fun and break them for science. Weekends are for the garage and the ocean.",
+    "whyLine": "Says sorry without being asked. Different lines on what's fair to ask about early.",
+    "quotes": [
+      "I don't really do small talk, sorry.",
+      "If it has an engine, I've probably taken it apart."
+    ],
+    "expiresInHours": 30,
+    "theirDecision": "pending"
+  },
+  {
+    "id": "cand_aiden",
+    "dialogueId": "d8",
+    "name": "Aiden",
+    "age": 26,
+    "school": "Berkeley · Architecture",
+    "photos": [
+      "https://images.unsplash.com/photo-1527980965255-d3b416303d12?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=720&h=900&fit=crop&crop=faces",
+      "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=720&h=900&fit=crop&crop=faces"
+    ],
+    "bio": "I draw buildings for a living and walk past the good ones on purpose. Weekend gallery person.",
+    "whyLine": "Slow, short replies, and you'd read that as disinterest. The pace otherwise fits.",
+    "quotes": [
+      "I'll take a long walk over almost anything.",
+      "Galleries are better when they're empty."
+    ],
+    "expiresInHours": 20,
+    "theirDecision": "pending"
+  }
+]

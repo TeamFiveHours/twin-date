@@ -1,0 +1,292 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #faf6f0;
+  --surface: #ffffff;
+  --surface-2: #f1eae0;
+  --ink: #221c17;
+  --ink-2: #6f6559;
+  --ink-3: #a89c8e;
+  --line: #e6ddd1;
+  --accent: #e8684a;
+  --accent-soft: #fbe3da;
+  --twin: #8b7bd8;
+  --twin-soft: #e9e4f7;
+  --good: #3f9a6e;
+  --good-soft: #ddf1e6;
+  --warn: #d9a441;
+  --warn-soft: #f8edd3;
+  --pad: 20px;
+  --gap-lg: 28px;
+  --gap-md: 16px;
+  --gap-sm: 8px;
+  --radius: 16px;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-twin: var(--twin);
+  --color-twin-soft: var(--twin-soft);
+  --color-good: var(--good);
+  --color-good-soft: var(--good-soft);
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --font-title: var(--font-gowun), "Gowun Batang", serif;
+  --font-body: var(--font-plex), "IBM Plex Sans KR", system-ui, sans-serif;
+  --radius-card: 16px;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior-y: none;
+}
+
+body {
+  margin: 0;
+}
+
+.font-title {
+  font-family: var(--font-title);
+}
+
+/* Phone viewports (under 480px, which covers every phone in portrait) use the
+   full width. Anything wider — tablet, desktop, a browser with DevTools docked —
+   shows the app in a 390px phone frame centered on a darker page. */
+.app-shell {
+  width: 100%;
+  margin: 0 auto;
+  min-height: 100dvh;
+  background: var(--bg);
+  position: relative;
+}
+
+@media (min-width: 480px) {
+  body {
+    background: #efe8de;
+  }
+  .app-shell {
+    max-width: 390px;
+    box-shadow: 0 0 0 1px var(--line);
+  }
+  /* position:fixed escapes .app-shell, so fixed overlays (sheets, toasts,
+     match screen, tab bar) re-centre themselves on the 390px frame */
+  .app-fixed {
+    left: 50%;
+    right: auto;
+    width: 390px;
+    transform: translateX(-50%);
+  }
+}
+
+/* utilities */
+/* In a browser tab the safe-area insets are 0, so keep a minimum breathing
+   room: 16px at the top (where the Pencil status bar sits) and 16px under the
+   tab bar. In standalone/PWA mode the real inset is added on top. */
+.safe-top {
+  padding-top: calc(env(safe-area-inset-top, 0px) + 16px);
+}
+.safe-bottom {
+  padding-bottom: calc(env(safe-area-inset-bottom, 0px) + 16px);
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+.animate-pulse-soft {
+  animation: pulse-soft 1.4s ease-in-out infinite;
+}
+
+@keyframes blink-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+.animate-blink {
+  animation: blink-dot 1s ease-in-out infinite;
+}
+
+@keyframes shake-x {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20%,
+  60% {
+    transform: translateX(-6px);
+  }
+  40%,
+  80% {
+    transform: translateX(6px);
+  }
+}
+.animate-shake {
+  animation: shake-x 0.4s ease-in-out;
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+.animate-sheet-up {
+  animation: sheet-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out;
+}
+
+@keyframes typing-dot {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.4;
+  }
+  40% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+.typing-dot {
+  animation: typing-dot 1.2s infinite ease-in-out;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.animate-spin-slow {
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes match-in {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.animate-match-in {
+  animation: match-in 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+input,
+textarea {
+  font-family: inherit;
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--ink-3);
+}
+
+/* speaking indicator bars (stage player) */
+@keyframes speak {
+  0%,
+  100% {
+    transform: scaleY(0.4);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+.animate-speak {
+  transform-origin: bottom;
+  animation: speak 0.7s infinite ease-in-out;
+}
+
+/* "Ready to date!" celebration on the first-dates loading screen */
+@keyframes heart-burst {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2) rotate(0deg);
+    opacity: 0;
+  }
+  18% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(calc(-50% + var(--dx)), calc(-50% + var(--dy))) scale(var(--s)) rotate(var(--rot));
+    opacity: 0;
+  }
+}
+.animate-heart-burst {
+  animation: heart-burst 1.3s cubic-bezier(0.16, 0.8, 0.3, 1) var(--delay, 0ms) both;
+}
+
+@keyframes ring-out {
+  0% {
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.4);
+    opacity: 0;
+  }
+}
+.animate-ring-out {
+  animation: ring-out 1s ease-out both;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.14);
+  }
+  65% {
+    transform: scale(0.96);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.animate-pop {
+  animation: pop 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}

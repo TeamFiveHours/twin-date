@@ -1,0 +1,75 @@
+{
+  "existing": [
+    {
+      "id": "chat_zoe",
+      "candidateId": "cand_zoe",
+      "name": "Liam",
+      "age": 27,
+      "photo": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=faces",
+      "matchedAgoMin": 1500,
+      "pinnedKeywords": "Weekend hikes · slow mornings",
+      "pinned": [
+        "Momo: \"So you're the kind of person who's at the trailhead at 7?\"",
+        "Liam's Twin: \"Only if there's coffee at the bottom.\""
+      ],
+      "opener": [
+        "Was the trail worth the 7am?",
+        "Coffee first or hike first?"
+      ],
+      "openerUsed": true,
+      "messages": [
+        {
+          "id": "m1",
+          "from": "them",
+          "text": "Hey! Momo said you're also a slow-morning person",
+          "agoMin": 1440
+        },
+        {
+          "id": "m2",
+          "from": "me",
+          "text": "Extremely. Coffee before words.",
+          "agoMin": 1430
+        },
+        {
+          "id": "m3",
+          "from": "them",
+          "text": "Same. Okay what's your go-to playlist for a slow morning",
+          "agoMin": 1420
+        },
+        {
+          "id": "m4",
+          "from": "them",
+          "text": "Thanks for sharing the playlist!",
+          "agoMin": 1380
+        }
+      ],
+      "twinAlias": "Juniper"
+    }
+  ],
+  "templates": {
+    "cand_emma": {
+      "pinnedKeywords": "Late-night walk playlists · lazy weekends",
+      "pinned": [
+        "Momo: \"What's on the walking one?\"",
+        "Michael's Twin: \"Slow stuff. I walk slow.\""
+      ],
+      "opener": [
+        "Did you try the playlist? Thoughts?",
+        "Any plans this weekend?"
+      ],
+      "messages": []
+    },
+    "cand_aiden": {
+      "pinnedKeywords": "Walks · empty galleries",
+      "pinned": [
+        "Momo: \"Want to talk about walks and galleries?\"",
+        "Aiden's Twin: \"Galleries are better when they're empty.\""
+      ],
+      "opener": [
+        "Which gallery is worth an empty Tuesday?",
+        "Long walk this weekend?"
+      ],
+      "messages": []
+    }
+  }
+}

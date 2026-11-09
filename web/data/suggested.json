@@ -1,0 +1,50 @@
+[
+  {
+    "id": "s1",
+    "alias": "Oak",
+    "age": 27,
+    "bio": "Weekends are for café-hopping downtown",
+    "distanceMi": 0.9,
+    "twinActive": true
+  },
+  {
+    "id": "s2",
+    "alias": "Flint",
+    "age": 31,
+    "bio": "Into running and grabbing a beer after",
+    "distanceMi": 1.2,
+    "twinActive": false
+  },
+  {
+    "id": "s3",
+    "alias": "Ridge",
+    "age": 29,
+    "bio": "Totally hooked on a pottery class lately",
+    "distanceMi": 0.4,
+    "twinActive": true
+  },
+  {
+    "id": "s4",
+    "alias": "Cedar",
+    "age": 29,
+    "bio": "Secretly love going to the movies alone",
+    "distanceMi": 0.7,
+    "twinActive": false
+  },
+  {
+    "id": "s5",
+    "alias": "Rook",
+    "age": 28,
+    "bio": "Big on houseplants and hiking",
+    "distanceMi": 1.8,
+    "twinActive": true
+  },
+  {
+    "id": "s6",
+    "alias": "Dune",
+    "age": 33,
+    "bio": "Weekend bikes and shooting film photos",
+    "distanceMi": 2.4,
+    "twinActive": false
+  }
+]
