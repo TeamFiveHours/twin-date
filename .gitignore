@@ -20,3 +20,21 @@ agent/data/
 
 # Claude Code
 .claude/
+
+# Design source files
+*.pen
+
+# Local recordings and videos
+*.mp4
+*.mov
+*.webm
+
+# Additional build artifacts
+dist/
+build/
+coverage/
+.vercel/
+
+# Editor settings
+.idea/
+.vscode/
