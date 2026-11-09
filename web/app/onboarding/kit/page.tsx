@@ -42,9 +42,9 @@ export default function KitPage() {
             <Mic className="size-9 text-twin" />
           </div>
           <h1 className="font-title text-[26px] font-bold leading-[1.35] text-ink">
-            Make {twinName} even
+            Make {twinName}
             <br />
-            more like you
+            even more like you
           </h1>
           <p className="max-w-[300px] text-[14px] leading-[1.5] text-ink-2">
             Right now {twinName} only knows what you typed. Add a week of your voice and

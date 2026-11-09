@@ -13,6 +13,8 @@ export type TwinAvatarProps = {
   halo?: boolean;
   /** interviewer variant: 'other' palette but no bun */
   bun?: boolean;
+  /** draw the generic illustrated Twin even for "me" (before the Twin exists, e.g. the intro cards) */
+  illustrated?: boolean;
   className?: string;
 };
 
@@ -31,6 +33,7 @@ export function TwinAvatar({
   mouthOpen,
   halo = true,
   bun,
+  illustrated = false,
   className,
 }: TwinAvatarProps) {
   const shirt = who === "me" ? "#8B7BD8" : "#E8A33D";
@@ -39,7 +42,7 @@ export function TwinAvatar({
   const eyesClosed = mood === "resting";
   const talkingOpen = mood === "talking" ? (mouthOpen ?? true) : false;
 
-  if (who === "me") {
+  if (who === "me" && !illustrated) {
     return (
       <span
         role="img"

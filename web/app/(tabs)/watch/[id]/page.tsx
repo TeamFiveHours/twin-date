@@ -64,7 +64,7 @@ export default function WatchDetailPage() {
   const chat = decision === "yes" ? chatForCandidate(id) : null;
 
   return (
-    <Screen>
+    <Screen className="pb-[132px]">
       <TopNav
         backHref="/watch"
         center={<div><div className="font-semibold text-ink">{twinName} ↔ {data.twin_name}</div><div className="text-[11px] text-ink-3">{data.turn_count} turns</div></div>}
@@ -81,6 +81,11 @@ export default function WatchDetailPage() {
           <div className="mb-2 flex items-center gap-2"><TwinMini who="me" size={24} /><span className="text-[13px] font-semibold text-twin">{twinName}&apos;s take</span></div>
           <p className="text-[14px] leading-[1.5] text-ink">{data.momo_take}</p>
         </div>
+      </div>
+
+      {/* CTA stays on screen while the video and Momo's take scroll underneath */}
+      <div className="app-fixed pointer-events-none fixed inset-x-0 bottom-0 z-30 flex justify-center">
+        <div className="safe-bottom pointer-events-auto w-full min-[480px]:max-w-[390px] bg-gradient-to-t from-bg via-bg/95 to-bg/0 px-5 pt-8">
         {decision === "yes" && chat ? (
           <Button full size="lg" icon={<ArrowRight className="size-5" />} onClick={() => router.push(`/match/${chat.id}`)}>
             Open chat with {data.profiles.name}
@@ -95,6 +100,7 @@ export default function WatchDetailPage() {
           // Pass / Match are decided on the profile; this just records the like and opens it
           <Button full size="lg" icon={<Heart className="size-5" fill="currentColor" />} onClick={like}>Like &amp; Open Profile</Button>
         )}
+        </div>
       </div>
     </Screen>
   );
