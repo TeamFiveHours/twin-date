@@ -14,7 +14,6 @@ TwinDate was created for **[c0mpiled-17: Seoul](https://luma.com/compiled-8lsr)*
 - **Team:** [Team Five Hours](https://github.com/TeamFiveHours)
 - **Live application:** https://twin-date-compiled-17.vercel.app/
 - **Public 90-second demo:** https://www.youtube.com/watch?v=V3odBsdKDos
-- **Source code:** https://github.com/TeamFiveHours/twin-date
 
 
 ## The Problem
