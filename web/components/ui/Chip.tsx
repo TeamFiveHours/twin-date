@@ -74,7 +74,7 @@ export type LikeState = "liked" | "requested" | "matched" | "passed";
 export function LikeChip({ state, small = true }: { state: LikeState; small?: boolean }) {
   const map = {
     liked: { tone: "accent" as ChipTone, label: "Liked", Icon: Heart },
-    requested: { tone: "accent" as ChipTone, label: "Match sent", Icon: Heart },
+    requested: { tone: "accent" as ChipTone, label: "Match", Icon: Heart },
     matched: { tone: "accent" as ChipTone, label: "Matched", Icon: Heart },
     passed: { tone: "bad" as ChipTone, label: "Passed", Icon: null },
   };

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Heart, X, UserRound } from "lucide-react";
+import { ArrowRight, Heart, UserRound } from "lucide-react";
 import { Screen } from "@/components/layout/Screen";
 import { TopNav } from "@/components/layout/TopNav";
 import { TwinMini } from "@/components/twin/TwinMini";
@@ -11,6 +11,8 @@ import { Chip } from "@/components/ui/Chip";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { StagePlayer } from "@/components/player/StagePlayer";
 import { useAsync } from "@/hooks/useAsync";
+import { chatForCandidate } from "@/lib/api";
+import { mockCuesFor } from "@/lib/feed-cues";
 import { getFeed } from "@/lib/feed-client";
 import { FEED_RESULT_META } from "@/lib/feed-types";
 import { useStore } from "@/lib/store";
@@ -31,12 +33,17 @@ export default function WatchDetailPage() {
     setStore((s) => s.seen.includes(id) ? {} : { seen: [...s.seen, id] });
   }, [id, setStore]);
 
-  const dialogue = useMemo<Dialogue | null>(() => data?.video_url ? {
-    id: data.id, otherId: data.profile_id, at: new Date(0).toISOString(),
-    result: legacyResult[data.result], verdict: data.momo_take,
-    video: { url: data.video_url, durationSec: 0, aspect: "1080 / 1920", native: true },
-    cues: [], highlights: [], durationSec: 0, lineCount: data.turn_count,
-  } : null, [data]);
+  const dialogue = useMemo<Dialogue | null>(() => {
+    if (!data?.video_url) return null;
+    // captions and highlight markers come from the mock transcripts of the same videos
+    const { cues, highlights, durationSec } = mockCuesFor(data.result);
+    return {
+      id: data.id, otherId: data.profile_id, at: new Date(0).toISOString(),
+      result: legacyResult[data.result], verdict: data.momo_take,
+      video: { url: data.video_url, durationSec, aspect: "1080 / 1920", native: true },
+      cues, highlights, durationSec, lineCount: data.turn_count,
+    };
+  }, [data]);
 
   if (loading) return (
     <Screen><TopNav backHref="/watch" /><Skeleton className="mt-4 aspect-[9/16] rounded-3xl" /><Skeleton className="mt-4 h-24 rounded-2xl" /></Screen>
@@ -54,7 +61,7 @@ export default function WatchDetailPage() {
     setStore((s) => ({ decisions: { ...s.decisions, [id]: "liked" } }));
     goProfile();
   };
-  const pass = () => setStore((s) => ({ decisions: { ...s.decisions, [id]: "no" } }));
+  const chat = decision === "yes" ? chatForCandidate(id) : null;
 
   return (
     <Screen>
@@ -74,15 +81,19 @@ export default function WatchDetailPage() {
           <div className="mb-2 flex items-center gap-2"><TwinMini who="me" size={24} /><span className="text-[13px] font-semibold text-twin">{twinName}&apos;s take</span></div>
           <p className="text-[14px] leading-[1.5] text-ink">{data.momo_take}</p>
         </div>
-        {decision === "liked" || decision === "yes" ? (
-          <Button full icon={<UserRound className="size-4" />} onClick={goProfile}>Liked · See photos</Button>
+        {decision === "yes" && chat ? (
+          <Button full size="lg" icon={<ArrowRight className="size-5" />} onClick={() => router.push(`/match/${chat.id}`)}>
+            Open chat with {data.profiles.name}
+          </Button>
+        ) : decision === "liked" || decision === "yes" ? (
+          <Button full variant="liked" icon={<Heart className="size-4" fill="currentColor" />} onClick={goProfile}>
+            {decision === "liked" ? "Liked · Open profile" : "Match · Open profile"}
+          </Button>
         ) : decision === "no" ? (
           <Button full variant="secondary" icon={<UserRound className="size-4" />} onClick={goProfile}>Passed · Open profile</Button>
         ) : (
-          <>
-            <Button full size="lg" icon={<Heart className="size-5" fill="currentColor" />} onClick={like}>Like &amp; see photos</Button>
-            <button type="button" onClick={pass} className="flex items-center justify-center gap-2 py-2 text-[13px] font-semibold text-ink-3"><X className="size-4" />Doesn&apos;t seem like a match</button>
-          </>
+          // Pass / Match are decided on the profile; this just records the like and opens it
+          <Button full size="lg" icon={<Heart className="size-5" fill="currentColor" />} onClick={like}>Like &amp; Open Profile</Button>
         )}
       </div>
     </Screen>

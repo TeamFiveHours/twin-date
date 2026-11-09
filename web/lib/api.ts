@@ -8,6 +8,7 @@
 
 import { useStore } from "./store";
 import { jitter, delay, minutesAgo, uid } from "./utils";
+import type { FeedItem } from "./feed-types";
 import { baseAccuracy, EMPTY_CARDS, SOURCE_STEP } from "./persona";
 import type {
   Candidate,
@@ -340,6 +341,38 @@ export async function decide(
 
 export type ChatPerson = { name: string; age: number; photo: string; twinAlias: string };
 
+/**
+ * Match from a Supabase feed item. SPARK partners already said yes, so the chat
+ * opens right away; MIXED / NO_SPARK stay "Match sent" (no partner simulation yet).
+ */
+export async function matchFeed(feed: FeedItem): Promise<{ matched: boolean; chatId?: string }> {
+  await delay(600);
+  store().set((s) => ({ decisions: { ...s.decisions, [feed.id]: "yes" } }));
+  if (feed.result !== "SPARK") return { matched: false };
+  const existing = chatForCandidate(feed.id);
+  if (existing) return { matched: true, chatId: existing.id };
+  const chatId = `chat_${feed.id}`;
+  const p = feed.profiles;
+  const chat: Chat = {
+    id: chatId,
+    candidateId: feed.id,
+    dialogueId: feed.id,
+    person: { name: p.name, age: p.age ?? 0, photo: p.photo_url ?? "", twinAlias: feed.twin_name },
+    messages: [],
+    pinned: [],
+    pinnedKeywords: feed.momo_one_liner,
+    opener: [`So, what did ${feed.twin_name} tell you about me?`, "Any plans this weekend?"],
+    openerUsed: false,
+    matchedAt: new Date().toISOString(),
+  };
+  store().set((s) => ({ chats: { ...s.chats, [chatId]: chat } }));
+  return { matched: true, chatId };
+}
+
+function feedChatFor(candidateId: string): Chat | undefined {
+  return Object.values(store().chats).find((c) => c.candidateId === candidateId && c.person);
+}
+
 export type ChatSummary = {
   chat: Chat;
   person: ChatPerson;
@@ -353,6 +386,7 @@ function existingChats(): Chat[] {
   return chatsJson.existing.map((c) => ({
     id: c.id,
     candidateId: c.candidateId,
+    dialogueId: c.dialogueId,
     messages: c.messages.map((m) => ({
       id: m.id,
       from: m.from as "me" | "them",
@@ -375,6 +409,8 @@ export function personOf(candidateId: string): ChatPerson {
   }
   const e = chatsJson.existing.find((x) => x.candidateId === candidateId);
   if (e) return { name: e.name, age: e.age, photo: e.photo, twinAlias: e.twinAlias ?? "" };
+  const f = feedChatFor(candidateId);
+  if (f?.person) return f.person;
   return { name: "Someone", age: 0, photo: "", twinAlias: "" };
 }
 
@@ -585,7 +621,12 @@ export function likeStateForDialogue(dialogueId: string): "liked" | "requested" 
 
 /** The Twin-to-Twin dialogue that led to this candidate, else null (seeded chats have none). */
 export function dialogueForCandidate(candidateId: string): string | null {
-  return candidatesJson.find((x) => x.id === candidateId)?.dialogueId ?? null;
+  return (
+    candidatesJson.find((x) => x.id === candidateId)?.dialogueId ??
+    feedChatFor(candidateId)?.dialogueId ??
+    existingChats().find((c) => c.candidateId === candidateId)?.dialogueId ??
+    null
+  );
 }
 
 /** The chat behind a dialogue once both sides liked, else null. */

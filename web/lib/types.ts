@@ -113,6 +113,9 @@ export type Message = {
 export type Chat = {
   id: string;
   candidateId: string;
+  /** set for chats opened from a Supabase feed item (no candidates.json entry) */
+  dialogueId?: string;
+  person?: { name: string; age: number; photo: string; twinAlias: string };
   messages: Message[];
   pinned: string[];
   pinnedKeywords: string;

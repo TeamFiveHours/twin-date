@@ -220,7 +220,7 @@ function PickInner() {
               ) : decided === "yes" ? (
                 <>
                   <Chip tone="accent" icon={<Heart className="size-3" fill="currentColor" />}>
-                    Match sent · waiting for {cand.name}
+                    Match · waiting for {cand.name}
                   </Chip>
                   <button
                     type="button"

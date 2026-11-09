@@ -1,16 +1,16 @@
 {
   "existing": [
     {
-      "id": "chat_zoe",
-      "candidateId": "cand_zoe",
-      "name": "Liam",
-      "age": 27,
-      "photo": "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=faces",
+      "id": "chat_michael",
+      "candidateId": "spark-chandler",
+      "name": "Michael",
+      "age": 28,
+      "photo": "https://wludvazctcooytzjjjxi.supabase.co/storage/v1/object/public/profile-images/daniel.png",
       "matchedAgoMin": 1500,
-      "pinnedKeywords": "Weekend hikes · slow mornings",
+      "pinnedKeywords": "Dry humor · quiet weekends",
       "pinned": [
-        "Momo: \"So you're the kind of person who's at the trailhead at 7?\"",
-        "Liam's Twin: \"Only if there's coffee at the bottom.\""
+        "Momo: \"Do we really have to do the whole favorite food interview?\"",
+        "Michael's Twin: \"I've prepared a very convincing answer.\""
       ],
       "opener": [
         "Was the trail worth the 7am?",
@@ -43,7 +43,8 @@
           "agoMin": 1380
         }
       ],
-      "twinAlias": "Juniper"
+      "twinAlias": "Chandler",
+      "dialogueId": "spark-chandler"
     }
   ],
   "templates": {
