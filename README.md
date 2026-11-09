@@ -1,48 +1,98 @@
 # TwinDate
 
-"내 AI Twin이 먼저 데이트하고, 사람은 그 결과를 보고 결정한다"는 핵심 루프를 모바일 웹에서 끝까지 눌러볼 수 있는 클릭 데모입니다. 백엔드 없이 동작하며 모든 데이터는 번들된 JSON과 브라우저 localStorage에만 있습니다. Instagram 연결만 별도의 agent 서비스를 씁니다.
+### Let your Twin date first.
 
-| 경로 | 내용 |
+**What if you could see how a first date might go before going on it yourself?**
+
+TwinDate gives you an AI Twin that learns how you communicate, goes on simulated first dates with other people's Twins, and brings back the conversations worth your time. Watch the chemistry unfold, decide who you'd like to meet, and take it from there.
+
+**[Try the live demo](https://twin-date-compiled-17.vercel.app/)** · **90-second demo video:** *Public link coming soon* · **[GitHub repository](https://github.com/TeamFiveHours/twin-date)**
+
+> Built by **Team Five Hours** for [c0mpiled-17: Seoul](https://luma.com/compiled-8lsr), November 9, 2026.
+
+## The Problem
+
+Dating apps are built around profiles, photos, and swipes. But a profile can tell you what someone likes—not how the two of you will actually get along.
+
+You don't discover someone's sense of humor, conflict style, conversational rhythm, or way of showing care until you interact. Research on online dating has documented inaccuracies in self-presentation, while speed-dating research shows how difficult it is to predict *unique romantic attraction* from self-reported traits alone (Toma et al., 2008; Joel et al., 2017).
+
+**The result:** endless browsing, repetitive introductions, and too many first dates that end with “we just didn't click.”
+
+## Our Solution
+
+**Instead of asking you to evaluate more profiles, TwinDate lets your Twin have the first conversation.**
+
+1. **Create your Twin.** A six-topic AI interview, together with information you choose to connect from services such as Spotify, Calendar, YouTube, and Instagram, helps shape an editable representation of your interests, personality, and communication style.
+2. **Let the Twins meet.** Your AI Twin has simulated first-date conversations with other Twins. The goal is to explore how two conversational styles interact—not simply count shared interests.
+3. **Watch the replay.** Review the conversation, follow subtitles and key moments, and read your Twin's take on where things clicked or missed.
+4. **Decide for yourself.** See the interaction before the person's photo is revealed. Like or pass; a human-to-human chat opens only when **both people say yes**.
+5. **Make the next meeting better.** Your Twin can suggest icebreakers and date ideas. Feedback on what felt authentic helps refine its future interactions.
+
+### From swiping to experiencing
+
+| Traditional dating apps | TwinDate |
 | --- | --- |
-| `web/` | Next.js 15 App Router + TypeScript + Tailwind 4.1 + Zustand. 앱 본체 |
-| `agent/` | Node + express + playwright + ws. Instagram 브라우저 에이전트 (포트 3100) |
-| `261106_Twindatev1.pen` | Pencil 디자인 소스. 전 화면 |
-| `design-assets/` | Pencil 파일에서만 쓰는 영상 스틸. 앱은 참조하지 않음 |
+| Judge people from static profiles | Explore an AI-simulated interaction first |
+| Start every introductory conversation yourself | Let your Twin handle the first round |
+| Discover conversational chemistry on a real first date | Preview possible connection points and friction |
+| Match mainly from profiles and preferences | Make the final decision with conversation context |
 
-## 실행
+TwinDate doesn't claim to predict love. It gives people **more evidence to decide whom they actually want to meet**, without making them do every first-round introduction themselves.
 
-Node 22.5 (`.nvmrc`).
+## How It Works
 
-```bash
-npm ci --prefix web && npm run dev --prefix web
+```mermaid
+flowchart LR
+    A[Connected app summaries<br/>+ AI interview] --> B[Your AI Twin]
+    B --> C[Twin-to-Twin<br/>date simulation]
+    D[Another person's Twin] --> C
+    C --> E[Replay, highlights<br/>+ Twin's take]
+    E --> F{Mutual interest?}
+    F -->|Both say yes| G[Human-to-human chat]
+    F -->|Not yet| H[Keep exploring]
+    E --> I[User feedback]
+    I --> B
 ```
 
-```bash
-npm ci --prefix agent && npm run dev --prefix agent
-```
+### The core product model
 
-웹 `http://localhost:3000`, 에이전트 `http://localhost:3100`. Turbopack dev 서버는 `globals.css` 수정이나 브랜치 전환 후 스타일이 남아 있을 때가 있어 그럴 때는 재시작합니다.
+The experience is organized around four connected parts:
 
-환경 변수는 `web/.env.example`, `agent/.env.example` 참고. agent 주소가 없으면 Instagram 연결 시트만 "연결 불가"로 닫히고 나머지는 그대로 동작합니다.
+- **Twin creation:** Interview responses and processed social data inform a persona and a conversational style. Users can review and correct how their Twin represents them.
+- **Agent-to-agent conversations:** Two Twins take turns in a simulated date. Conversations have transcripts, opening topics, and distinct outcomes (`CLICKED`, `MIXED`, or `MISSED`).
+- **Explainable replays:** Highlights identify moments where the conversation connected or fell flat, accompanied by each Twin's perspective and potential icebreakers.
+- **Human choice and feedback:** Recommendations lead to a mutual opt-in decision. User corrections and post-date feedback are intended to improve future Twin behavior.
 
-## 화면
+This design separates **what a person is like**, **how two Twins interact**, and **whether two real people want to meet**.
 
-루트 `/`는 온보딩 완료 여부만 보고 `/watch` 또는 `/onboarding/signup`으로 보냅니다.
+## Privacy and Trust
 
-| 라우트 | 화면 |
-| --- | --- |
-| `/onboarding/signup` → `intro` → `connect` → `interview` → `kit` → (`address`) → `matching` | 온보딩 (스플래시, 서비스 소개 + Twin 이름, 앱 연결, 6문항 인터뷰, 웨어러블 키트 안내, 주소(선택), Twin 첫 데이트 로딩 → "Ready to date!" → Feed) |
-| `/watch`, `/watch/suggested`, `/watch/{id}` | Feed, Suggested, Date 상세 (영상 + 자막 + 하이라이트 + Momo's take) |
-| `/match/pick?c=`, `/match`, `/match/{chatId}`, `/match/{chatId}/plan` | 프로필 (Like → Match), Matches, 채팅, 만남 제안 |
-| `/survey/{meetingId}` | 만남 후 설문 |
-| `/me`, `/tune` | Momo 탭, Tune Momo |
-| `/dev/ui`, `/dev/avatars` | 개발용 갤러리 |
+An AI Twin should be something you can understand and control—not a black box that speaks for you without permission.
 
-모든 데이터 접근은 `web/lib/api.ts`를 거치므로 실제 API로 바꿀 때 화면 코드는 그대로 둘 수 있습니다. 읽기 전용 콘텐츠는 `web/data/*.json`, 사용자 상태는 `web/lib/store.ts` (localStorage 키 `twindate-store`).
+Our design principles are:
 
-## 배포
+- **User control:** People should be able to inspect and correct the structured profile that represents them.
+- **Intentional sharing:** Only information needed for the Twin experience should be shared, subject to user approval.
+- **Human agency:** Twins explore potential connections; real people make the decisions.
 
-- Vercel Root Directory는 `web`. 아니면 모든 경로가 404.
-- `main` 직접 push 금지. 기능 브랜치 → PR → 리뷰 후 머지.
-- `.claude/`, `agent/profiles`, `agent/data`, `node_modules`는 추적하지 않음.
-- `.pen`은 Pencil에서 저장해야 디스크에 반영되므로 커밋 전에 저장 확인.
+**Long-term direction:** We envision an optional wearable kit that can learn from conversational patterns and biosignals in everyday life. The proposed approach is to process raw signals on-device, discard them after processing, and share only an approved structured profile. This wearable workflow is part of the product vision, **not a claim about functionality delivered in the hackathon prototype**.
+
+## Beyond Dating
+
+Dating is the starting point, not the limit. The same idea—letting AI representations handle low-stakes first introductions—could help people discover compatible friends, co-founders, collaborators, or communities.
+
+**Your Twin does the first round of meeting. You show up for the people who matter.**
+
+## Hackathon
+
+TwinDate was created for **[c0mpiled-17: Seoul](https://luma.com/compiled-8lsr)**, a five-hour, build-first AI hackathon held on **November 9, 2026**, at COEX Startup Branch in Seoul, South Korea.
+
+- **Team:** [Team Five Hours](https://github.com/TeamFiveHours)
+- **Live application:** https://twin-date-compiled-17.vercel.app/
+- **Public 90-second demo:** Coming soon
+- **Source code:** https://github.com/TeamFiveHours/twin-date
+
+## References
+
+1. Toma, C. L., Hancock, J. T., & Ellison, N. B. (2008). Separating fact from fiction: An examination of deceptive self-presentation in online dating profiles. *Personality and Social Psychology Bulletin, 34*(8), 1023–1036.
+2. Joel, S., Eastwick, P. W., & Finkel, E. J. (2017). Is romantic desire predictable? Machine learning applied to initial romantic attraction. *Psychological Science, 28*(10), 1478–1489.
