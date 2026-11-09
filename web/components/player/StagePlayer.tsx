@@ -219,8 +219,8 @@ export function StagePlayer({
           </>
         )}
 
-        {/* CC toggle */}
-        <button
+        {/* CC toggle: no external captions available for pre-rendered demo files */}
+        {cues.length > 0 && <button
           type="button"
           aria-pressed={cc}
           aria-label="Captions"
@@ -229,7 +229,7 @@ export function StagePlayer({
         >
           CC
           <span className={cn("h-0.5 w-4 rounded-[1px]", cc ? "bg-accent" : "bg-white/30")} />
-        </button>
+        </button>}
 
         {/* loading */}
         {!ready && (

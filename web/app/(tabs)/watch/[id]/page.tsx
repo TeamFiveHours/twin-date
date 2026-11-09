@@ -1,182 +1,90 @@
 "use client";
 
-import { Suspense, useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowRight, Heart, User } from "lucide-react";
+import { Heart, X, UserRound } from "lucide-react";
 import { Screen } from "@/components/layout/Screen";
 import { TopNav } from "@/components/layout/TopNav";
 import { TwinMini } from "@/components/twin/TwinMini";
 import { Button } from "@/components/ui/Button";
-import { Chip, LikeChip, type ChipTone } from "@/components/ui/Chip";
-import { EmptyState } from "@/components/ui/EmptyState";
+import { Chip } from "@/components/ui/Chip";
 import { Skeleton } from "@/components/ui/Skeleton";
 import { StagePlayer } from "@/components/player/StagePlayer";
 import { useAsync } from "@/hooks/useAsync";
-import { useScreenState } from "@/hooks/useScreenState";
-import * as api from "@/lib/api";
+import { getFeed } from "@/lib/feed-client";
+import { FEED_RESULT_META } from "@/lib/feed-types";
 import { useStore } from "@/lib/store";
-import type { Result } from "@/lib/types";
-import { cn, dayLabel } from "@/lib/utils";
+import type { Dialogue, Result } from "@/lib/types";
 
-const tag: Record<Result, { label: string; tone: ChipTone; box: string; text: string }> = {
-  good: { label: "Spark", tone: "good", box: "bg-good-soft", text: "text-good" },
-  meh: { label: "Mixed", tone: "warn", box: "bg-warn-soft", text: "text-warn" },
-  bad: { label: "No spark", tone: "bad", box: "bg-surface-2", text: "text-ink-2" },
-};
+const legacyResult: Record<string, Result> = { SPARK: "good", MIXED: "meh", NO_SPARK: "bad" };
 
-const LIVE_WINDOW_MS = 30 * 60 * 1000;
-
-function WatchDetailInner() {
+export default function WatchDetailPage() {
   const { id } = useParams<{ id: string }>();
-  const forced = useScreenState();
   const router = useRouter();
-  const twin = useStore((s) => s.twin.name);
+  const twinName = useStore((s) => s.twin.name);
   const setStore = useStore((s) => s.set);
-  const { data, loading } = useAsync(() => api.getDialogue(id), [id], { forced });
-  const [liking, setLiking] = useState(false);
+  const decision = useStore((s) => s.decisions[id]);
   const summaryRef = useRef<HTMLDivElement>(null);
+  const { data, loading, error, reload } = useAsync(() => getFeed(id), [id]);
 
-  // opening a conversation clears its NEW badge on the list
   useEffect(() => {
-    if (!id) return;
-    setStore((s) => (s.seen.includes(id) ? {} : { seen: [...s.seen, id] }));
+    setStore((s) => s.seen.includes(id) ? {} : { seen: [...s.seen, id] });
   }, [id, setStore]);
 
-  if (loading || (!data && forced === "loading")) {
-    return (
-      <Screen>
-        <TopNav backHref="/watch" title=" " />
-        <Skeleton className="aspect-[720/1120] rounded-3xl" />
-        <Skeleton className="mt-4 h-24 rounded-2xl" />
-      </Screen>
-    );
-  }
-  if (!data || forced === "empty" || forced === "error") {
-    return (
-      <Screen>
-        <TopNav backHref="/watch" />
-        <EmptyState
-          mood="awkward"
-          title="I couldn't find that conversation"
-          cta="Back to conversations"
-          onCta={() => router.push("/watch")}
-        />
-      </Screen>
-    );
-  }
+  const dialogue = useMemo<Dialogue | null>(() => data?.video_url ? {
+    id: data.id, otherId: data.profile_id, at: new Date(0).toISOString(),
+    result: legacyResult[data.result], verdict: data.momo_take,
+    video: { url: data.video_url, durationSec: 0, aspect: "1080 / 1920", native: true },
+    cues: [], highlights: [], durationSec: 0, lineCount: data.turn_count,
+  } : null, [data]);
 
-  const alias = api.aliasOf(data.otherId);
-  const cand = api.candidateForDialogue(data.id, true);
-  const decision = api.decisionForDialogue(data.id);
-  const chat = cand ? api.chatForCandidate(cand.id) : null;
-  const like = api.likeStateForDialogue(data.id);
+  if (loading) return (
+    <Screen><TopNav backHref="/watch" /><Skeleton className="mt-4 aspect-[9/16] rounded-3xl" /><Skeleton className="mt-4 h-24 rounded-2xl" /></Screen>
+  );
+  if (error || !data) return (
+    <Screen><TopNav backHref="/watch" />
+      <div className="py-10 text-center text-sm text-ink-2">{error ? "Could not load conversation." : "Conversation not found."}</div>
+      {error && <button onClick={reload} className="block w-full text-center font-semibold text-accent">Retry</button>}
+    </Screen>
+  );
 
-  /** Records a like and opens the profile; Pass / Match are decided there. */
-  const likeAndSee = async () => {
-    if (!cand || liking) return;
-    setLiking(true);
-    await api.decide(cand.id, "liked");
-    router.push(`/match/pick?c=${cand.id}`);
+  const meta = FEED_RESULT_META[data.result];
+  const goProfile = () => router.push(`/profile/${data.id}`);
+  const like = () => {
+    setStore((s) => ({ decisions: { ...s.decisions, [id]: "liked" } }));
+    goProfile();
   };
-  const live = Date.now() - new Date(data.at).getTime() < LIVE_WINDOW_MS;
-  const t = tag[data.result];
+  const pass = () => setStore((s) => ({ decisions: { ...s.decisions, [id]: "no" } }));
 
   return (
     <Screen>
       <TopNav
         backHref="/watch"
-        center={
-          <div>
-            <div className="truncate text-[15px] font-semibold text-ink">
-              {twin} ↔ {alias}
-            </div>
-            <div className="text-[11px] text-ink-3">
-              {live ? `Live · ${data.lineCount} turns in` : `${dayLabel(data.at)} · ${data.lineCount} turns`}
-            </div>
-          </div>
-        }
-        right={
-          <div className="flex items-center gap-1.5">
-            {like && <LikeChip state={like} small={false} />}
-            <Chip tone={t.tone}>{t.label}</Chip>
-          </div>
-        }
+        center={<div><div className="font-semibold text-ink">{twinName} ↔ {data.twin_name}</div><div className="text-[11px] text-ink-3">{data.turn_count} turns</div></div>}
+        right={<Chip tone={meta.tone}>{meta.label}</Chip>}
       />
+      <div className="mt-3 flex flex-col gap-4">
+        {dialogue ? (
+          <StagePlayer dialogue={dialogue} alias={data.twin_name} twin={twinName} onEnded={() => summaryRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })} />
+        ) : (
+          <div className="rounded-2xl bg-surface-2 p-5 text-center text-sm text-ink-3">Video not uploaded yet</div>
+        )}
+        <div ref={summaryRef} className={`rounded-2xl p-4 ${data.result === "SPARK" ? "bg-good-soft" : data.result === "MIXED" ? "bg-warn-soft" : "bg-surface-2"}`}>
 
-      <div className="mt-2 flex flex-col gap-4">
-        <StagePlayer
-          dialogue={data}
-          alias={alias}
-          twin={twin}
-          onEnded={() => summaryRef.current?.scrollIntoView({ behavior: "smooth", block: "center" })}
-        />
-
-        <div ref={summaryRef} className={cn("flex flex-col gap-2 rounded-2xl p-4", t.box)}>
-          <div className="flex items-center gap-2">
-            <TwinMini who="me" size={24} />
-            <span className={cn("text-[12px] font-semibold", t.text)}>{twin}&apos;s take</span>
-          </div>
-          <p className="text-[14px] leading-[1.5] text-ink">{data.verdict}</p>
+          <div className="mb-2 flex items-center gap-2"><TwinMini who="me" size={24} /><span className="text-[13px] font-semibold text-twin">{twinName}&apos;s take</span></div>
+          <p className="text-[14px] leading-[1.5] text-ink">{data.momo_take}</p>
         </div>
-
-        {cand && (
-          <div className="flex flex-col items-center gap-3">
-            {!decision ? (
-              <Button full size="lg" loading={liking} icon={<Heart className="size-5" fill="currentColor" />} onClick={likeAndSee}>
-                Like &amp; Open Profile
-              </Button>
-            ) : decision === "yes" && chat ? (
-              <Button full icon={<ArrowRight className="size-4" />} onClick={() => router.push(`/match/${chat.id}`)}>
-                Open chat with {cand.name}
-              </Button>
-            ) : decision === "no" ? (
-              <Button
-                full
-                variant="secondary"
-                icon={<User className="size-4" />}
-                onClick={() => router.push(`/match/pick?c=${cand.id}`)}
-              >
-                Open profile
-              </Button>
-            ) : (
-              // liked / match sent: the button itself says where I stand
-              <Button
-                full
-                variant="liked"
-                icon={<Heart className="size-4" fill="currentColor" />}
-                onClick={() => router.push(`/match/pick?c=${cand.id}`)}
-              >
-                {decision === "liked" ? "Liked · Open profile" : "Match sent · Open profile"}
-              </Button>
-            )}
-            {decision === "liked" && (
-              <span className="text-[13px] font-semibold text-ink-3">Tap Match on {cand.name}&apos;s profile to open a chat</span>
-            )}
-            {decision === "yes" && !chat && (
-              <span className="text-[13px] font-semibold text-ink-3">Waiting for {cand.name} to answer</span>
-            )}
-            {decision === "yes" && chat && (
-              <button
-                type="button"
-                onClick={() => router.push(`/match/pick?c=${cand.id}`)}
-                className="flex items-center gap-1.5 text-[13px] font-semibold text-ink-3"
-              >
-                <User className="size-3.5" />
-                See {cand.name}&apos;s profile
-              </button>
-            )}
-            {decision === "no" && <span className="text-[13px] font-semibold text-ink-3">You passed</span>}
-          </div>
+        {decision === "liked" || decision === "yes" ? (
+          <Button full icon={<UserRound className="size-4" />} onClick={goProfile}>Liked · See photos</Button>
+        ) : decision === "no" ? (
+          <Button full variant="secondary" icon={<UserRound className="size-4" />} onClick={goProfile}>Passed · Open profile</Button>
+        ) : (
+          <>
+            <Button full size="lg" icon={<Heart className="size-5" fill="currentColor" />} onClick={like}>Like &amp; see photos</Button>
+            <button type="button" onClick={pass} className="flex items-center justify-center gap-2 py-2 text-[13px] font-semibold text-ink-3"><X className="size-4" />Doesn&apos;t seem like a match</button>
+          </>
         )}
       </div>
     </Screen>
-  );
-}
-
-export default function WatchDetailPage() {
-  return (
-    <Suspense fallback={<Screen>{null}</Screen>}>
-      <WatchDetailInner />
-    </Suspense>
   );
 }
