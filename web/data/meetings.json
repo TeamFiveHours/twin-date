@@ -1,0 +1,19 @@
+{
+  "proposals": [
+    {
+      "place": "Coupa Café",
+      "when": "Sat 2:00 PM",
+      "why": "You both mentioned slow afternoons. It's quiet after lunch."
+    },
+    {
+      "place": "Sunday farmers market",
+      "when": "Sun 10:00 AM",
+      "why": "They go every week. You'd be on their turf, which they'll like."
+    },
+    {
+      "place": "Dish trail loop",
+      "when": "Sat 5:30 PM",
+      "why": "A walk, not a sit-down. Easier if the first hour is awkward."
+    }
+  ]
+}

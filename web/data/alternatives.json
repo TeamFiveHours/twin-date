@@ -1,0 +1,32 @@
+{
+  "d1:c7": [
+    "Mostly podcasts. Which is also a choice.",
+    "Nothing, actually. I like hearing myself wheeze.",
+    "Whatever you'd put on. Send me the running one."
+  ],
+  "d2:c3": [
+    "Nice. What did you do with the extra hour?",
+    "Rare win or regular thing?",
+    "Same. I'm a terrible morning person."
+  ],
+  "d3:c3": [
+    "Twice a week is serious. How long have you been at it?",
+    "I tried once and my forearms quit on me.",
+    "What's the appeal—the problem solving or the falling?"
+  ],
+  "d5:c3": [
+    "I'm a noodle person myself. Mostly the instant kind, sadly.",
+    "I burn toast. What's your signature dish?",
+    "I cook on Sundays and eat the same thing all week."
+  ],
+  "d7:c3": [
+    "Let's leave that one. What do you train for?",
+    "Gym run-ins are the worst. What's your usual routine there?",
+    "Changing the subject on purpose—what's your week looking like?"
+  ],
+  "default": [
+    "Let's try a lighter question. What's your week been like?",
+    "I'd rather hear about you. What are you into lately?",
+    "Fair enough. Want to pick the next topic?"
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "topics": [
+    {
+      "title": "About you",
+      "questions": [
+        {
+          "q": "Let's start simple. Tell me about yourself—whatever you'd say to someone you just met.",
+          "hint": "For example: \"I'm 27, I work in product design, and most weekends I'm either climbing or hunting for a new ramen place.\""
+        },
+        {
+          "q": "What do people usually get wrong about you at first?",
+          "hint": "For example: \"I come across quiet, but I'm the one planning the trip once I'm comfortable.\""
+        }
+      ]
+    },
+    {
+      "title": "Who you're looking for",
+      "questions": [
+        {
+          "q": "What kind of person are you hoping to meet? Describe them like you're telling a friend.",
+          "hint": "For example: \"Someone curious who asks questions, laughs easily, and doesn't take themselves too seriously.\""
+        },
+        {
+          "q": "And what does a relationship look like at its best for you—casual, serious, somewhere in between?",
+          "hint": "For example: \"Serious, but it should still feel light—I want a partner, not a project.\""
+        }
+      ]
+    },
+    {
+      "title": "Hard nos",
+      "questions": [
+        {
+          "q": "Now the hard nos. What's a genuine dealbreaker for you—something that's a no no matter what?",
+          "hint": "Common ones: smoking, long-distance, different views on religion or kids, heavy drinking."
+        },
+        {
+          "q": "Is there anything you'd rather I never bring up on your behalf?",
+          "hint": "For example: \"Don't talk about my ex, my salary, or politics.\""
+        }
+      ]
+    }
+  ],
+  "extra": [
+    {
+      "title": "Your week",
+      "questions": [
+        {
+          "q": "What did you do this week that you'd actually tell a date about?",
+          "hint": null
+        },
+        {
+          "q": "What's one thing I got wrong in a recent conversation?",
+          "hint": null
+        }
+      ]
+    },
+    {
+      "title": "Fine-tuning",
+      "questions": [
+        {
+          "q": "Do I ask too many questions, or not enough?",
+          "hint": null
+        },
+        {
+          "q": "Anything else I should know before the next one?",
+          "hint": null
+        }
+      ]
+    }
+  ]
+}
