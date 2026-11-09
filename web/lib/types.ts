@@ -89,20 +89,6 @@ export type Dialogue = {
   lineCount: number;
 };
 
-export type Candidate = {
-  id: string;
-  dialogueId: string;
-  name: string;
-  age: number;
-  school: string;
-  photos: string[];
-  bio: string;
-  whyLine: string;
-  quotes: string[];
-  expiresAt: string;
-  theirDecision: "yes" | "no" | "pending";
-};
-
 export type Message = {
   id: string;
   from: "me" | "them";
@@ -143,16 +129,6 @@ export type Outcome = {
 };
 
 export type TwinState = "talking" | "back" | "resting";
-
-export type HomeData = {
-  twinState: TwinState;
-  talkingIndex: number;
-  todayCount: number;
-  stats: { chats: number; clicked: number; missed: number };
-  recent: Dialogue[];
-  matchedCount: number;
-  pendingSurvey: { meetingId: string; name: string } | null;
-};
 
 export type Suggested = {
   id: string;

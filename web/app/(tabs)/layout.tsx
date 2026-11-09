@@ -6,8 +6,8 @@ import { TabBar } from "@/components/layout/TabBar";
 import { Toaster } from "@/components/ui/Toast";
 import { useHydrated, useStore } from "@/lib/store";
 
-/** Full-screen pages inside the tab group that hide the tab bar (dialogue detail, profile pick). */
-const NO_TAB_BAR = [/^\/watch\/(?!suggested$)[^/]+$/, /^\/match\/pick$/, /^\/profile\/[^/]+$/];
+/** Full-screen pages inside the tab group that hide the tab bar (dialogue detail, profile). */
+const NO_TAB_BAR = [/^\/watch\/(?!suggested$)[^/]+$/, /^\/profile\/[^/]+$/];
 
 export default function TabsLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();

@@ -11,10 +11,8 @@ import { jitter, delay, minutesAgo, uid } from "./utils";
 import type { FeedItem } from "./feed-types";
 import { baseAccuracy, EMPTY_CARDS, SOURCE_STEP } from "./persona";
 import type {
-  Candidate,
   Chat,
   Dialogue,
-  HomeData,
   Meeting,
   Outcome,
   PersonaCards,
@@ -29,9 +27,7 @@ import type {
 
 import meJson from "@/data/me.json";
 import interviewJson from "@/data/interview.json";
-import othersJson from "@/data/others.json";
 import dialoguesJson from "@/data/dialogues.json";
-import candidatesJson from "@/data/candidates.json";
 import chatsJson from "@/data/chats.json";
 import meetingsJson from "@/data/meetings.json";
 import repliesJson from "@/data/replies.json";
@@ -178,32 +174,9 @@ function hydrateDialogue(d: RawDialogue): Dialogue {
   };
 }
 
-export function aliasOf(otherId: string) {
-  return othersJson.find((o) => o.id === otherId)?.alias ?? "Someone";
-}
-
-function allDialogues(): Dialogue[] {
-  if (store().logsCleared) return [];
-  return dialoguesJson.map(hydrateDialogue).sort((a, b) => (a.at < b.at ? 1 : -1));
-}
-
-export async function listDialogues(filter?: Result | "all"): Promise<Dialogue[]> {
-  await jitter(300, 700);
-  const all = allDialogues();
-  if (!filter || filter === "all") return all;
-  return all.filter((d) => d.result === filter);
-}
-
 export async function getDialogue(id: string): Promise<Dialogue | null> {
   await jitter(300, 600);
-  return allDialogues().find((d) => d.id === id) ?? null;
-}
-
-export async function sendFeedback(lineId: string, v: "up" | "down", reason?: string) {
-  await delay(200);
-  store().set((s) => ({ feedback: { ...s.feedback, [lineId]: v } }));
-  void reason;
-  return { ok: true };
+  return dialoguesJson.map(hydrateDialogue).find((d) => d.id === id) ?? null;
 }
 
 export async function alternatives(dialogueId: string, lineId: string): Promise<string[]> {
@@ -215,39 +188,6 @@ export async function alternatives(dialogueId: string, lineId: string): Promise<
 /* ------------------------------------------------------------------ */
 /* Home                                                                */
 /* ------------------------------------------------------------------ */
-
-function isToday(iso: string) {
-  const d = new Date(iso);
-  const n = new Date();
-  return d.toDateString() === n.toDateString();
-}
-
-export async function getHome(): Promise<HomeData> {
-  await jitter(400, 800);
-  const s = store();
-  const dialogues = allDialogues();
-  const today = dialogues.filter((d) => isToday(d.at));
-  const stats = {
-    chats: today.length,
-    clicked: today.filter((d) => d.result === "good").length,
-    missed: today.filter((d) => d.result === "bad").length,
-  };
-  const twinState: HomeData["twinState"] = s.twin.paused
-    ? "resting"
-    : dialogues.length === 0
-      ? "resting"
-      : "back";
-  const pending = await getPendingSurvey();
-  return {
-    twinState,
-    talkingIndex: today.length + 1,
-    todayCount: today.length,
-    stats,
-    recent: dialogues.slice(0, 3),
-    matchedCount: Object.keys(s.chats).length + chatsJson.existing.length,
-    pendingSurvey: pending,
-  };
-}
 
 export async function getSuggested(): Promise<Suggested[]> {
   await jitter(300, 600);
@@ -276,63 +216,6 @@ export async function saveTune(partial: {
     history: [entry, ...t.history].slice(0, 20),
   });
   return store().twin;
-}
-
-/* ------------------------------------------------------------------ */
-/* Candidates / decisions                                              */
-/* ------------------------------------------------------------------ */
-
-type RawCandidate = (typeof candidatesJson)[number];
-
-function hydrateCandidate(c: RawCandidate): Candidate {
-  return {
-    ...c,
-    theirDecision: c.theirDecision as Candidate["theirDecision"],
-    expiresAt: new Date(Date.now() + c.expiresInHours * 3600000).toISOString(),
-  };
-}
-
-export async function getCandidates(): Promise<Candidate[]> {
-  await jitter(400, 800);
-  const decided = store().decisions;
-  return candidatesJson
-    .map(hydrateCandidate)
-    .filter((c) => !decided[c.id])
-    .filter((c) => new Date(c.expiresAt).getTime() > Date.now())
-    .slice(0, 3);
-}
-
-/**
- * liked = I opened their photos (interest shown, nothing sent);
- * yes   = I asked to match: a chat opens if their Twin already said yes;
- * no    = I passed.
- */
-export async function decide(
-  candidateId: string,
-  v: "liked" | "yes" | "no",
-  reason?: string,
-): Promise<{ matched: boolean; chatId?: string }> {
-  await delay(600);
-  void reason;
-  store().set((s) => ({ decisions: { ...s.decisions, [candidateId]: v } }));
-  const c = candidatesJson.find((x) => x.id === candidateId);
-  if (v === "yes" && c && c.theirDecision === "yes") {
-    const chatId = `chat_${candidateId.replace("cand_", "")}`;
-    const tpl = chatsJson.templates[candidateId as keyof typeof chatsJson.templates];
-    const chat: Chat = {
-      id: chatId,
-      candidateId,
-      messages: [],
-      pinned: tpl?.pinned ?? [],
-      pinnedKeywords: tpl?.pinnedKeywords ?? "",
-      opener: tpl?.opener ?? [],
-      openerUsed: false,
-      matchedAt: new Date().toISOString(),
-    };
-    store().set((s) => ({ chats: { ...s.chats, [chatId]: chat } }));
-    return { matched: true, chatId };
-  }
-  return { matched: false };
 }
 
 /* ------------------------------------------------------------------ */
@@ -402,11 +285,6 @@ function existingChats(): Chat[] {
 }
 
 export function personOf(candidateId: string): ChatPerson {
-  const c = candidatesJson.find((x) => x.id === candidateId);
-  if (c) {
-    const d = dialoguesJson.find((x) => x.id === c.dialogueId);
-    return { name: c.name, age: c.age, photo: c.photos[0], twinAlias: d ? aliasOf(d.otherId) : "" };
-  }
   const e = chatsJson.existing.find((x) => x.candidateId === candidateId);
   if (e) return { name: e.name, age: e.age, photo: e.photo, twinAlias: e.twinAlias ?? "" };
   const f = feedChatFor(candidateId);
@@ -593,46 +471,13 @@ export async function addAccuracy(delta: number) {
 
 export { EMPTY_CARDS };
 
-/** Candidate (if any) that came out of a dialogue; undecided + unexpired only. */
-/** My decision on the candidate behind a dialogue (null until I've looked at the profile). */
-export function decisionForDialogue(dialogueId: string): "liked" | "yes" | "no" | null {
-  const c = candidatesJson.find((x) => x.dialogueId === dialogueId);
-  return c ? (store().decisions[c.id] ?? null) : null;
-}
-
-/** The candidate behind a dialogue. Decided candidates are hidden unless `includeDecided`. */
-export function candidateForDialogue(dialogueId: string, includeDecided = false): Candidate | null {
-  const c = candidatesJson.find((x) => x.dialogueId === dialogueId);
-  if (!c) return null;
-  if (!includeDecided && store().decisions[c.id]) return null;
-  return hydrateCandidate(c);
-}
-
-/** Liked / matched / passed for a dialogue's candidate, or null if I haven't decided. */
-export function likeStateForDialogue(dialogueId: string): "liked" | "requested" | "matched" | "passed" | null {
-  const c = candidatesJson.find((x) => x.dialogueId === dialogueId);
-  if (!c) return null;
-  const d = store().decisions[c.id];
-  if (!d) return null;
-  if (d === "no") return "passed";
-  if (d === "liked") return "liked";
-  return chatForCandidate(c.id) ? "matched" : "requested";
-}
-
 /** The Twin-to-Twin dialogue that led to this candidate, else null (seeded chats have none). */
 export function dialogueForCandidate(candidateId: string): string | null {
   return (
-    candidatesJson.find((x) => x.id === candidateId)?.dialogueId ??
     feedChatFor(candidateId)?.dialogueId ??
     existingChats().find((c) => c.candidateId === candidateId)?.dialogueId ??
     null
   );
-}
-
-/** The chat behind a dialogue once both sides liked, else null. */
-export function chatForDialogue(dialogueId: string): Chat | null {
-  const c = candidatesJson.find((x) => x.dialogueId === dialogueId);
-  return c ? chatForCandidate(c.id) : null;
 }
 
 /** The chat opened with a candidate after a mutual Yes, if any. */
@@ -643,10 +488,4 @@ export function chatForCandidate(candidateId: string): Chat | null {
     existingChats().find((c) => c.candidateId === candidateId) ??
     null
   );
-}
-
-/** Candidate by id regardless of decision (for the pick screen). */
-export function candidateById(id: string): Candidate | null {
-  const c = candidatesJson.find((x) => x.id === id);
-  return c ? hydrateCandidate(c) : null;
 }
