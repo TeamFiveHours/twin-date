@@ -142,7 +142,7 @@ function PickInner() {
     <Screen>
       <TopNav onBack={() => router.back()} />
       <div className="flex items-end justify-between">
-        <h1 className="font-title text-[26px] font-bold text-ink">Your pick</h1>
+        <h1 className="font-title text-[26px] font-bold text-ink">Profile</h1>
         {!loading && !decided && (
           <span className="text-[13px] text-ink-3">
             {left} {left === 1 ? "candidate" : "candidates"} left today
@@ -189,33 +189,33 @@ function PickInner() {
                 </Button>
               ) : decided === "liked" ? (
                 <>
-                  <Button
-                    full
-                    size="lg"
-                    icon={<Heart className="size-5" fill="currentColor" />}
-                    loading={busy}
-                    onClick={sayYes}
-                  >
-                    Match with {cand.name}
-                  </Button>
+                  <div className="flex w-full gap-3">
+                    <Button
+                      variant="secondary"
+                      size="lg"
+                      full
+                      className="text-ink-2"
+                      icon={<X className="size-5" />}
+                      disabled={busy}
+                      onClick={() => setNoSheet(true)}
+                    >
+                      Pass
+                    </Button>
+                    <Button
+                      variant="primary"
+                      size="lg"
+                      full
+                      icon={<Heart className="size-5" fill="currentColor" />}
+                      loading={busy && !waiting}
+                      disabled={waiting}
+                      onClick={sayYes}
+                    >
+                      Match
+                    </Button>
+                  </div>
                   <p className="text-center text-[12px] text-ink-3">
-                    A chat opens the moment you both say yes. {cand.name} is never told about a No.
+                    A chat opens the moment you both say yes. {cand.name} is never told about a Pass.
                   </p>
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={async () => {
-                      setBusy(true);
-                      await api.decide(cand.id, "no");
-                      setBusy(false);
-                      toast("Okay, passing");
-                      router.back();
-                    }}
-                    className="flex items-center gap-1.5 text-[13px] font-semibold text-ink-3 disabled:opacity-50"
-                  >
-                    <X className="size-3.5" />
-                    Doesn&apos;t seem like a match
-                  </button>
                 </>
               ) : decided === "yes" ? (
                 <>
@@ -268,7 +268,7 @@ function PickInner() {
                   disabled={busy}
                   onClick={() => setNoSheet(true)}
                 >
-                  No
+                  Pass
                 </Button>
                 <Button
                   variant="primary"
@@ -283,7 +283,7 @@ function PickInner() {
                 </Button>
               </div>
               <p className="mt-3 text-center text-[12px] text-ink-3">
-                A chat only opens when you both say Yes. {cand.name} is never told about a No.
+                A chat only opens when you both say Yes. {cand.name} is never told about a Pass.
               </p>
             </>
           )}

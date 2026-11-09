@@ -91,7 +91,7 @@ function ChatInner({ chatId }: { chatId: string }) {
             <div className="min-w-0">
               <div className="flex items-center gap-1.5 text-[15px] font-semibold text-ink">
                 <span className="truncate">{person.name}</span>
-                {person.twinAlias && (
+                {person.twinAlias && person.twinAlias !== person.name && (
                   <span className="shrink-0 rounded-full bg-twin-soft px-1.5 py-px text-[10px] font-semibold text-twin">
                     {person.twinAlias}
                   </span>
@@ -134,12 +134,6 @@ function ChatInner({ chatId }: { chatId: string }) {
       </button>
 
       <div className="mt-4 flex flex-col gap-2.5">
-        {messages.length === 0 && !typing && (
-          <div className="flex flex-col items-center gap-1.5 px-6 py-12 text-center">
-            <div className="font-title text-[20px] font-bold text-ink">You both said Yes. Say hi!</div>
-            {showOpener && <p className="text-[13px] text-ink-2">Tap one of my ideas below if you&apos;re stuck.</p>}
-          </div>
-        )}
         {groups.map((g) => (
           <div key={g.day} className="flex flex-col gap-2.5">
             <div className="text-center text-[11px] text-ink-3">{g.day}</div>
