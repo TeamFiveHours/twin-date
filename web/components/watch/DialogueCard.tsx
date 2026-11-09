@@ -112,12 +112,15 @@ export function DialogueCard({
         )}
       </div>
 
-      <div className="flex min-w-0 flex-1 flex-col gap-[7px]">
-        <div className="flex items-center gap-2">
+      <div className="flex min-w-0 flex-1 flex-col gap-[6px]">
+        {/* name owns the first line; the date sits at the card's top right and the chips get their own row */}
+        <div className="flex items-center justify-between gap-2">
           <span className="truncate text-[15px] font-semibold text-ink">{alias}</span>
+          <span className="shrink-0 text-[11px] text-ink-3">{dayLabel(d.at)}</span>
+        </div>
+        <div className="flex flex-wrap items-center gap-1.5">
           <ResultChip result={d.result} />
           {like && <LikeChip state={like} />}
-          <span className="ml-auto shrink-0 text-[11px] text-ink-3">{dayLabel(d.at)}</span>
         </div>
         <p className="line-clamp-2 text-[13px] leading-[1.45] text-ink-2">{d.verdict}</p>
         <div className="flex items-center justify-between">
