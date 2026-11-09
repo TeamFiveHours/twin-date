@@ -84,7 +84,7 @@ function ChatInner({ chatId }: { chatId: string }) {
           <button
             type="button"
             aria-label={`See ${person.name}'s profile`}
-            onClick={() => chat && router.push(`/match/pick?c=${chat.candidateId}`)}
+            onClick={() => chat && router.push(`/profile/${chat.candidateId}`)}
             className="flex min-w-0 items-center gap-2.5 text-left active:opacity-80"
           >
             <PersonPhoto src={person.photo} alt={person.name} size={36} />
