@@ -6,7 +6,7 @@
 
 TwinDate gives you an AI Twin that learns how you communicate, goes on simulated first dates with other people's Twins, and brings back the conversations worth your time. Watch the chemistry unfold, decide who you'd like to meet, and take it from there.
 
-**[Try the live demo](https://twin-date-compiled-17.vercel.app/)** · **90-second demo video:** *Public link coming soon* · **[GitHub repository](https://github.com/TeamFiveHours/twin-date)**
+**[Try the live demo](https://twin-date-compiled-17.vercel.app/)** · **[GitHub repository](https://twin-date-compiled-17.vercel.app/)**
 
 > Built by **Team Five Hours** for [c0mpiled-17: Seoul](https://luma.com/compiled-8lsr), November 9, 2026.
 
