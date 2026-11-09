@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { Chip, LikeChip } from "@/components/ui/Chip";
 import { FEED_RESULT_META, type FeedItem } from "@/lib/feed-types";
+import { dayLabel } from "@/lib/utils";
 
 type Decision = "liked" | "yes" | "no" | undefined;
 
@@ -48,7 +49,9 @@ export function FeedCard({ feed, decision, isNew }: { feed: FeedItem; decision: 
           {decision === "no" && <LikeChip state="passed" />}
         </div>
         <p className="line-clamp-2 text-[13px] leading-[1.45] text-ink-2">{feed.momo_take}</p>
-        <div className="text-[11px] text-ink-3">{feed.turn_count} turns</div>
+        <div className="text-[11px] text-ink-3">
+          {feed.turn_count} turns · {dayLabel(new Date(Date.now() - (feed.display_order - 1) * 86_400_000).toISOString())}
+        </div>
       </div>
     </Link>
   );

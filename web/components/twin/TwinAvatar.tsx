@@ -1,4 +1,9 @@
+import Image from "next/image";
 import type { Mood, Who } from "@/lib/types";
+import { cn } from "@/lib/utils";
+
+/** The user's own Twin (Momo) is a 3D render; every "me" avatar shows it. */
+export const MOMO_PHOTO = "/profile/momo.png";
 
 export type TwinAvatarProps = {
   size?: number;
@@ -34,6 +39,19 @@ export function TwinAvatar({
   const eyesClosed = mood === "resting";
   const talkingOpen = mood === "talking" ? (mouthOpen ?? true) : false;
 
+  if (who === "me") {
+    return (
+      <span
+        role="img"
+        aria-label={`Your Twin, ${mood}`}
+        className={cn("relative inline-block shrink-0 overflow-hidden rounded-full bg-twin-soft", halo && "ring-4 ring-twin-soft", className)}
+        style={{ width: size, height: size }}
+      >
+        <Image src={MOMO_PHOTO} alt="" fill sizes={`${size}px`} className="object-cover" style={{ objectPosition: "50% 38%" }} />
+      </span>
+    );
+  }
+
   return (
     <svg
       width={size}
@@ -41,7 +59,7 @@ export function TwinAvatar({
       viewBox="0 0 96 96"
       className={className}
       role="img"
-      aria-label={`${who === "me" ? "Your Twin" : "Their Twin"}, ${mood}`}
+      aria-label={`Their Twin, ${mood}`}
     >
       {halo && <circle cx="48" cy="48" r="42" fill="#E9E4F7" />}
       {/* Shirt */}
@@ -59,17 +77,10 @@ export function TwinAvatar({
       {/* Shade */}
       <ellipse cx="63" cy="49" rx="15" ry="27" fill="#D9A47E66" />
       {/* Fringe */}
-      {who === "me" ? (
-        <path
-          d="M18 32 C 22 14, 40 10, 48 13 C 58 9, 74 14, 78 32 C 70 24, 62 26, 56 24 C 50 28, 42 27, 36 24 C 30 26, 24 26, 18 32 Z"
-          fill={hair}
-        />
-      ) : (
         <path
           d="M18 34 C 20 16, 38 10, 48 12 C 58 10, 76 16, 78 34 C 74 26, 64 22, 48 22 C 32 22, 22 26, 18 34 Z"
           fill={hair}
         />
-      )}
       {/* Shine */}
       <ellipse cx="35" cy="26" rx="7" ry="4" fill="#FFFFFF55" />
       {/* Eyes */}

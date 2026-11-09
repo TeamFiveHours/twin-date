@@ -1,14 +1,18 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
-import { Heart, X } from "lucide-react";
+import { ArrowRight, Heart, X } from "lucide-react";
+import { MatchOverlay } from "@/components/match/MatchOverlay";
 import { Screen } from "@/components/layout/Screen";
 import { TopNav } from "@/components/layout/TopNav";
 import { Button } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
 import { Skeleton } from "@/components/ui/Skeleton";
+import { toast } from "@/components/ui/Toast";
 import { useAsync } from "@/hooks/useAsync";
+import { chatForCandidate, matchFeed } from "@/lib/api";
 import { getFeed } from "@/lib/feed-client";
 import { FEED_RESULT_META } from "@/lib/feed-types";
 import { useStore } from "@/lib/store";
@@ -20,6 +24,8 @@ export default function ProfilePage() {
   const decision = useStore((s) => s.decisions[id]);
   const setStore = useStore((s) => s.set);
   const { data, loading, error, reload } = useAsync(() => getFeed(id), [id]);
+  const [busy, setBusy] = useState(false);
+  const [matched, setMatched] = useState<{ photo: string; name: string } | null>(null);
 
   if (loading) return <Screen><TopNav backHref={`/watch/${id}`} /><Skeleton className="mt-4 h-[340px] rounded-2xl" /></Screen>;
   if (error || !data) return <Screen><TopNav backHref="/watch" />
@@ -29,7 +35,24 @@ export default function ProfilePage() {
 
   const profile = data.profiles;
   const meta = FEED_RESULT_META[data.result];
-  const decide = (value: "liked" | "no") => setStore((s) => ({ decisions: { ...s.decisions, [id]: value } }));
+  const chat = decision === "yes" ? chatForCandidate(id) : null;
+  const pass = () => {
+    setStore((s) => ({ decisions: { ...s.decisions, [id]: "no" } }));
+    toast("Okay, passing");
+    router.push("/watch");
+  };
+  const match = async () => {
+    if (busy) return;
+    setBusy(true);
+    const res = await matchFeed(data);
+    if (res.matched && res.chatId) {
+      setMatched({ photo: profile.photo_url ?? "", name: profile.name });
+      setTimeout(() => router.replace(`/match/${res.chatId}`), 1500);
+      return;
+    }
+    setBusy(false);
+    toast(`Match sent. I'll tell you when ${profile.name} answers`);
+  };
 
   return <Screen>
     <TopNav backHref={`/watch/${id}`} title="Profile" />
@@ -71,10 +94,37 @@ export default function ProfilePage() {
       </div>
     </div>
     <div className="my-5 flex flex-col items-center gap-3">
-      {decision === "liked" || decision === "yes" ? <Chip tone="accent">Liked</Chip> : (
-        <Button full size="lg" icon={<Heart className="size-5" fill="currentColor" />} onClick={() => decide("liked")}>Like</Button>
+      {decision === "yes" && chat ? (
+        <Button full size="lg" icon={<ArrowRight className="size-5" />} onClick={() => router.push(`/match/${chat.id}`)}>
+          Open chat with {profile.name}
+        </Button>
+      ) : decision === "yes" ? (
+        <Chip tone="accent" icon={<Heart className="size-3" fill="currentColor" />}>
+          Match · waiting for {profile.name}
+        </Chip>
+      ) : decision === "no" ? (
+        <>
+          <Chip>You passed on {profile.name}</Chip>
+          <Button full size="lg" icon={<Heart className="size-5" fill="currentColor" />} loading={busy} onClick={match}>
+            Changed my mind—Match with {profile.name}
+          </Button>
+        </>
+      ) : (
+        <>
+          <div className="flex w-full gap-3">
+            <Button variant="secondary" size="lg" full className="text-ink-2" icon={<X className="size-5" />} disabled={busy} onClick={pass}>
+              Pass
+            </Button>
+            <Button size="lg" full icon={<Heart className="size-5" fill="currentColor" />} loading={busy} onClick={match}>
+              Match
+            </Button>
+          </div>
+          <p className="text-center text-[12px] text-ink-3">
+            A chat opens the moment you both say yes. {profile.name} is never told about a Pass.
+          </p>
+        </>
       )}
-      <button type="button" className="flex items-center gap-2 py-2 text-[13px] font-semibold text-ink-3" onClick={() => { decide("no"); router.push("/watch"); }}><X className="size-4" />Doesn&apos;t seem like a match</button>
     </div>
+    {matched && <MatchOverlay photo={matched.photo} name={matched.name} />}
   </Screen>;
 }
